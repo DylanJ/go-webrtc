@@ -15,7 +15,7 @@ CGO_Channel CGO_Channel_RegisterObserver(void *o, int goChannel) {
 void CGO_Channel_Send(CGO_Channel channel, void *data, int size, bool binary) {
   auto dc = (webrtc::DataChannelInterface*)channel;
   auto bytes = rtc::CopyOnWriteBuffer((uint8_t*)data, size);
-  auto buffer = DataBuffer(bytes, true);
+  auto buffer = DataBuffer(bytes, binary);
   dc->Send(buffer);
 }
 
