@@ -73,6 +73,7 @@ func NewDataChannel(o unsafe.Pointer) *DataChannel {
 	return c
 }
 
+// Send a message over a datachannel in either text or binary mode.
 func (c *DataChannel) Send(data []byte, binary bool) {
 	if nil == data {
 		return
@@ -80,10 +81,12 @@ func (c *DataChannel) Send(data []byte, binary bool) {
 	C.CGO_Channel_Send(c.cgoChannel, unsafe.Pointer(&data[0]), C.int(len(data)), C.bool(binary))
 }
 
+// SendText sends a message over the Data Channel in text mode.
 func (c *DataChannel) SendText(data []byte) {
 	c.Send(data, false)
 }
 
+// SendText sends a message over the Data Channel in binary mode.
 func (c *DataChannel) SendBinary(data []byte) {
 	c.Send(data, true)
 }
