@@ -1,9 +1,10 @@
 package webrtc
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestDataStateEnums(t *testing.T) {
@@ -113,7 +114,7 @@ func TestDataStateEnums(t *testing.T) {
 			c.OnMessage = func(msg []byte) {
 				messages <- msg
 			}
-			c.Send(data)
+			c.Send(data, true)
 			select {
 			case recv := <-messages:
 				So(c.OnMessage, ShouldNotBeNil)
@@ -121,7 +122,15 @@ func TestDataStateEnums(t *testing.T) {
 			case <-time.After(time.Second * 1):
 				t.Fatal("Timed out.")
 			}
-			c.Send(nil)
+			c.Send(data, false)
+			select {
+			case recv := <-messages:
+				So(c.OnMessage, ShouldNotBeNil)
+				So(recv, ShouldResemble, data)
+			case <-time.After(time.Second * 1):
+				t.Fatal("Timed out.")
+			}
+			c.Send(nil, false)
 			select {
 			case <-messages:
 				t.Fatal("Unexpected message when sending nil.")

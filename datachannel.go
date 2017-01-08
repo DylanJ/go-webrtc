@@ -73,11 +73,19 @@ func NewDataChannel(o unsafe.Pointer) *DataChannel {
 	return c
 }
 
-func (c *DataChannel) Send(data []byte) {
+func (c *DataChannel) Send(data []byte, binary bool) {
 	if nil == data {
 		return
 	}
-	C.CGO_Channel_Send(c.cgoChannel, unsafe.Pointer(&data[0]), C.int(len(data)))
+	C.CGO_Channel_Send(c.cgoChannel, unsafe.Pointer(&data[0]), C.int(len(data)), C.bool(binary))
+}
+
+func (c *DataChannel) SendText(data []byte) {
+	c.Send(data, false)
+}
+
+func (c *DataChannel) SendBinary(data []byte) {
+	c.Send(data, true)
 }
 
 func (c *DataChannel) Close() error {
