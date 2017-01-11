@@ -213,14 +213,7 @@ function prepareDataChannel(channel) {
   channel.onmessage = function(msg) {
     var recv = msg.data;
     console.log(msg);
-    // Go sends only raw bytes.
-    if ("[object ArrayBuffer]" == recv.toString()) {
-      var bytes = new Uint8Array(recv);
-      line = String.fromCharCode.apply(null, bytes);
-    } else {
-      line = recv;
-    }
-    line = line.trim();
+    var line = recv.trim();
     log(line);
   }
 }
